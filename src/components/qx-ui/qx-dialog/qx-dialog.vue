@@ -2,15 +2,15 @@
 
     <!-- <button @click="isShow = true">点我弹个窗</button> -->
     <teleport to="body">
-        <div v-if="isShow" class="mask">
+        
             <div class="dialog">
-                <h3>我是一个弹窗</h3>
-                <h4>一些内容</h4>
-                <h4>一些内容</h4>
-                <h4>一些内容</h4>
+                <h3>图层选择</h3>
+                <h4 @click=clickBtn1>图层1</h4>
+                <h4 @click=clickBtn2>图层2</h4>
+                <h4 @click=clickBtn3>图层3</h4>
                 <button @click="isShow = false">关闭弹窗</button>
             </div>
-        </div>
+
     </teleport>
 
 </template>
@@ -21,26 +21,36 @@ export default {
     name:'Dialog',
     setup(){
         let isShow = ref(true)
-        return {isShow}
+        function clickBtn1(){
+            console.log(`clickBtn1`)
+        }
+        function clickBtn2(){
+            console.log(`clickBtn2`)
+        }
+        function clickBtn3(){
+            console.log(`clickBtn3`)
+        }
+        return {
+            isShow,
+            clickBtn1,
+            clickBtn2,
+            clickBtn3,
+        }
     }
 }
 </script>
 
 <style>
-.mask{
+
+.dialog{
     z-index: 10;
     position: absolute;
-    top: 0;bottom: 0;left: 0;right: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-}
-.dialog{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
+    top: 10px;
+    left: 10px;
+    /* transform: translate(-50%,-50%); */
     text-align: center;
-    width: 300px;
+    width: 200px;
     height: 300px;
-    background-color: green;
+    background-color: rgb(140, 135, 225,0.5);
 }
 </style>

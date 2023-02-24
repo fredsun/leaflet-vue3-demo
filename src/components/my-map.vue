@@ -58,10 +58,11 @@
     <div id ='map' class="mainMap"></div>
 </template>
 <style>
-.map{
+.mainMap{
     height: 100vh;
     width: 100vw;
     overflow: hidden;
     position: relative;
+    z-index: 1;
 }
 </style>
