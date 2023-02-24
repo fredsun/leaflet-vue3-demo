@@ -1,30 +1,40 @@
 <template>
     <div class="qx-main-view" id="qx-main-view">
-         <MyMap mapkey="keyName" class="my-map"/>
-         <!-- <button class="btnChange">点我更换</button> -->
-         <QXDialog />
+         <MyMap mapkey="keyName" class="my-map" :title="title"/>
+         <QXDialog  />
     </div>
     
 </template>
 <script >
+import {ref,reactive} from 'vue'
 import MyMap from './my-map.vue'
 import QXDialog from './qx-ui/qx-dialog/qx-dialog.vue'
 export default{
-    components:{QXDialog,MyMap}
+    components:{QXDialog,MyMap},
+    setup(){
+
+        // const state = reactive({
+        // fatherData: "I am from Father.",
+        // });
+        const title = ref("aaa")
+        console.log(title)
+        return{
+            title,
+            // QXDialog,
+            // MyMap
+        }
+    }   
+    
+    
 }
 </script>
 
 <style>
 .my-map{
-  /* width: 500px;
-  height: 500px; */
   width: 100vw;
   height: 100vh;
 }
-/* .btnChange{
-    z-index: 999;
-    position: absolute;
-} */
+
 .qx-main-view{
     position: relative;
 }
