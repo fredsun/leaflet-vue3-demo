@@ -4,11 +4,13 @@
 <script setup>
     import L from 'leaflet';
   import 'leaflet/dist/leaflet.css'
+  import {getMapKeystore}from '../utils/keystore'
   import {onMounted} from 'vue'
-  let tdtKey = 'tdtkey'
+  let tdtKey = getMapKeystore()
   const initMap = () => {
     //影像地图
      //加载leaflet地图矢量图层
+     console.log(`getMayKeystore：${tdtKey}`)
     const vecLayer = L.tileLayer(`http://t0.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=${tdtKey}`)
     // const tiandituMap =  L.tileLayer(`http://t0.tianditu.gov.cn/img_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=img&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&tk=${tdtKey}`)
     //注记
