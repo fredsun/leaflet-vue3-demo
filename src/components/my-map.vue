@@ -40,8 +40,10 @@
     //添加标记
     L.marker([32.063417, 118.849672]).addTo(map)
     //
+    // console.log(L.control.layers);
     
-    // L.control.layers(baseLayers).addTo(map);
+    L.control.layers(baseLayers).addTo(map);
+    
     // L.control.addLayers(imgLayerGroup).addTo(map)
     // L.control.addLayers(vecLayerGroup).addTo(map)
   }
