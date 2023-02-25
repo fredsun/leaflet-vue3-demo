@@ -4,7 +4,8 @@
   import {getMapKeystore}from '../utils/keystore'
   import {onMounted, defineProps, watch} from 'vue'
   let tdtKey = getMapKeystore()
-
+  let map ;
+  let mapLayer = {};
 
   const props = defineProps({
     title:String,
@@ -12,17 +13,13 @@
   })
 
   watch(props,(newValue, oldValue)=>{
-    // for(let node of document.querySelectorAll('.leaflet-control-layers-base label')){
-    //   console.log( node.querySelector('input'))
-    // }
-    // console.log(`watch`+props.title);
-    // L.layerGroup.clearLayers();
-    // L.control.layers(afterLayers).addTo(map);
-    console.log(`watch l`+L);
+    console.log(`watch l`+props.title);
+    changeMapType(props.title)
   })
   console.log(props.title);
   console.log(`11111`);
   
+
 	// setTimeout(()=>{
   //   console.log(props.title);
 	// 			},3000)
@@ -44,12 +41,8 @@
                 "天地图矢量": vecLayerGroup,
                 "天地图影像": imgLayerGroup
             };
-    var afterLayers = {
-        "天地图影像": imgLayerGroup,
-        "天地图矢量": vecLayerGroup,
-    };
-    let map = L.map('map',{  //需绑定地图容器div的id
-        
+   
+    map = L.map('map',{  //需绑定地图容器div的id
       center:[32.063417, 118.849672], //初始地图中心
       zoom:13, //初始缩放等级
       maxZoom:18, //最大缩放等级
@@ -57,6 +50,7 @@
       zoomControl:false,//不显示缩放小控件
       layers:[vecLayerGroup]
     })
+
     //添加圆圈
     L.circle([32.063417, 118.849672], 500, {
                 color: 'red',
@@ -68,15 +62,22 @@
     //
     // console.log(L.control.layers);
     
-    // L.control.layers(baseLayers).addTo(map);
+    L.control.layers(baseLayers, null).addTo(map);
     
     // L.control.addLayers(imgLayerGroup).addTo(map)
     // L.control.addLayers(vecLayerGroup).addTo(map)
     for(let node of document.querySelectorAll('.leaflet-control-layers-base label')){
-      console.log( node.querySelector('input'))
+      mapLayer[node.innerText.trim()] = node.querySelector('input')
     }
-    console.log(`setup l`+L);
+    // console.log(`setup l`+L);
         
+  }
+
+  // 模拟点击
+  function changeMapType(value){
+  console.log(`change`+value)
+      // this.mapType = value
+      mapLayer[value].click() 
   }
   onMounted(()=>{
     initMap()

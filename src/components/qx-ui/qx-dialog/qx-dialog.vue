@@ -28,11 +28,11 @@ export default {
         let isShow = ref(true)
         function clickBtn1(){
             console.log(`clickBtn1`)
-            ctx.emit("clickedItem", 1);
+            ctx.emit("clickedItem", `天地图矢量`);
         }
         function clickBtn2(){
             console.log(`clickBtn2`)
-            ctx.emit("clickedItem", 2);
+            ctx.emit("clickedItem", `天地图影像`);
         }
         // function clickBtn3(){
         //     console.log(`clickBtn3`)
