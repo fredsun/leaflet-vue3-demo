@@ -1,7 +1,7 @@
 <template>
     <div class="qx-main-view" id="qx-main-view">
          <MyMap mapkey="keyName" class="my-map" :title="title"/>
-         <QXDialog  />
+         <QXDialog  @clickedItem="handleClicked"/>
     </div>
     
 </template>
@@ -12,14 +12,14 @@ import QXDialog from './qx-ui/qx-dialog/qx-dialog.vue'
 export default{
     components:{QXDialog,MyMap},
     setup(){
-
-        // const state = reactive({
-        // fatherData: "I am from Father.",
-        // });
+        const handleClicked = value=>{
+            console.log(`clickedItem${value}`)
+        }
         const title = ref("aaa")
         console.log(title)
         return{
             title,
+            handleClicked
             // QXDialog,
             // MyMap
         }

@@ -5,24 +5,13 @@
   import {onMounted, defineProps, watch} from 'vue'
   let tdtKey = getMapKeystore()
 
-//   defineProps({
-//   fatherDataName: String,
-// });
-  // console.log(fatherDataName)
-  // const props = defineProps(['title'])
-  // const props = defineProps({
-  //   title: String,
-  //   default: ""
-  // })
-  // console.log(props.title)
+
   const props = defineProps({
     title:String,
     default: ""
 })
 console.log(props.title);
-// watch (props,(newValue,oldValue)=>{
-//   console.log(`title${props}`)
-// }) 
+
   const initMap = () => {
     //天地图矢量图层
     const vecLayer = L.tileLayer(`http://t0.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=${tdtKey}`)
