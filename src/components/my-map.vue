@@ -9,10 +9,17 @@
   const props = defineProps({
     title:String,
     default: ""
-})
-console.log(props.title);
-
-  const initMap = () => {
+  })
+  watch(props,(newValue, oldValue)=>{
+    console.log(props.title);
+  })
+  console.log(props.title);
+  console.log(`11111`);
+  
+	setTimeout(()=>{
+    console.log(props.title);
+				},3000)
+    const initMap = () => {
     //天地图矢量图层
     const vecLayer = L.tileLayer(`http://t0.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=${tdtKey}`)
     //天地图矢量注记图层

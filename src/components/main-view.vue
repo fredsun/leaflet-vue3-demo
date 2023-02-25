@@ -12,11 +12,17 @@ import QXDialog from './qx-ui/qx-dialog/qx-dialog.vue'
 export default{
     components:{QXDialog,MyMap},
     setup(){
+        let title = ref("aaa")
+        // const data = ref<string>(' ')
+
         const handleClicked = value=>{
-            console.log(`clickedItem${value}`)
+            console.log(`handleClicked${value}`)
+            title.value = value+``
+            console.log(`title${title.value}`)
+            // data.value = '我是父组件异步获取的数据'
         }
-        const title = ref("aaa")
-        console.log(title)
+        
+        
         return{
             title,
             handleClicked
