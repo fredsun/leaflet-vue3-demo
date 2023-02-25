@@ -30,10 +30,10 @@ export default {
             console.log(`clickBtn1`)
             ctx.emit("clickedItem", 1);
         }
-        // function clickBtn2(){
-        //     console.log(`clickBtn2`)
-        //     emit("clickedItem", 2);
-        // }
+        function clickBtn2(){
+            console.log(`clickBtn2`)
+            ctx.emit("clickedItem", 2);
+        }
         // function clickBtn3(){
         //     console.log(`clickBtn3`)
         //     emit("clickedItem", 3);
@@ -41,7 +41,7 @@ export default {
         return {
             isShow,
             clickBtn1,
-            // clickBtn2,
+            clickBtn2,
             // clickBtn3,
         }
     }

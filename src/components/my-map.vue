@@ -10,15 +10,22 @@
     title:String,
     default: ""
   })
+
   watch(props,(newValue, oldValue)=>{
-    console.log(props.title);
+    // for(let node of document.querySelectorAll('.leaflet-control-layers-base label')){
+    //   console.log( node.querySelector('input'))
+    // }
+    // console.log(`watch`+props.title);
+    // L.layerGroup.clearLayers();
+    // L.control.layers(afterLayers).addTo(map);
+    console.log(`watch l`+L);
   })
   console.log(props.title);
   console.log(`11111`);
   
-	setTimeout(()=>{
-    console.log(props.title);
-				},3000)
+	// setTimeout(()=>{
+  //   console.log(props.title);
+	// 			},3000)
     const initMap = () => {
     //天地图矢量图层
     const vecLayer = L.tileLayer(`http://t0.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=${tdtKey}`)
@@ -37,6 +44,10 @@
                 "天地图矢量": vecLayerGroup,
                 "天地图影像": imgLayerGroup
             };
+    var afterLayers = {
+        "天地图影像": imgLayerGroup,
+        "天地图矢量": vecLayerGroup,
+    };
     let map = L.map('map',{  //需绑定地图容器div的id
         
       center:[32.063417, 118.849672], //初始地图中心
@@ -57,10 +68,15 @@
     //
     // console.log(L.control.layers);
     
-    L.control.layers(baseLayers).addTo(map);
+    // L.control.layers(baseLayers).addTo(map);
     
     // L.control.addLayers(imgLayerGroup).addTo(map)
     // L.control.addLayers(vecLayerGroup).addTo(map)
+    for(let node of document.querySelectorAll('.leaflet-control-layers-base label')){
+      console.log( node.querySelector('input'))
+    }
+    console.log(`setup l`+L);
+        
   }
   onMounted(()=>{
     initMap()
