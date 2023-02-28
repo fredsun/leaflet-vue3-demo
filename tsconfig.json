@@ -7,7 +7,7 @@
     "strict": true,
     "jsx": "preserve",
     "resolveJsonModule": true,
-    "isolatedModules": true,
+    "isolatedModules": true,//vite使用esbuild来转译
     "esModuleInterop": true,
     "lib": [
       "ESNext",
@@ -16,7 +16,9 @@
     "skipLibCheck": true,
     "noEmit": true,
     "allowJs": true, //script标签里防止不写lang="ts"报错
-    "compilerOptions.isolatedModules": true //vite使用esbuild来转译
+    "paths":{//设置路径映射
+      "@/request/*":["./src/request/*"]
+    }
   },
   "include": [
     "src/**/*.ts",
