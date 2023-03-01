@@ -116,10 +116,17 @@ const initMap = () => {
     // showModal = true
 
 
-    $toast.open("1000")
-    setTimeout(() => {
-      $toast.close()
-    }, 2000)
+    // $toast.open("1000")
+    // setTimeout(() => {
+    //   $toast.close()
+    // }, 2000)
+
+    $toast({
+      value: 'zoom change',
+      duration: 2000, // 如果大于0则不必使用destory方法
+      background: '#000',
+      color: '#fff'
+    })
   })
 
   // //地图单击监听
