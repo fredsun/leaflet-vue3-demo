@@ -6,3 +6,4 @@ npm install ant-design-vue --save
 npm install axios --save
 npm install localforage --save
 npm install leaflet --save
+npm install leaflet.markercluster
