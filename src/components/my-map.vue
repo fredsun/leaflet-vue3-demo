@@ -9,6 +9,7 @@ import jsonData from '../../public/js/BEIJING_country.json'
 import "leaflet.markercluster/dist/MarkerCluster.css"
 import "leaflet.markercluster/dist/MarkerCluster.Default.css"
 import "leaflet.markercluster";
+import "leaflet-rotatedmarker"
 import QXToast from './qx-ui/qx-toast/qx-toast.vue';
 let tdtKey = getMapKeystore()
 var map;
@@ -64,7 +65,51 @@ const initMap = () => {
     fillOpacity: 0.5
   }).addTo(map)
   //添加标记
-  L.marker([32.063417, 118.849672]).addTo(map)
+  L.marker([32.053417, 118.849672]).addTo(map)
+  L.marker([32.023117, 118.049272]).addTo(map)
+  L.marker([32.064417, 118.449642]).addTo(map)
+  L.marker([32.413117, 118.849679]).addTo(map)
+  L.marker([32.053457, 118.249672]).addTo(map)
+  L.marker([32.163417, 118.849660]).addTo(map)
+  L.marker([32.033417, 118.549671]).addTo(map)
+
+  //添加点
+  L.circle([32.053417, 118.869500], {
+    //点半径
+    radius: 5,
+    //颜色
+    color: 'red',
+    //透明度
+    fillOpacity: 1
+  }).addTo(map);
+
+  //绘制旋转图标
+  var icon = L.icon({
+    //图标地址
+    iconUrl: "./src/assets/icon_plane.png",
+    //图标大小
+    iconSize: [38, 38],
+    iconAnchor:[15,63]
+  })
+  //添加飞机标注
+  L.marker([32.053417, 118.869500], {
+    //设置图标
+    icon: icon,
+    rotationAngle: 90
+  }).addTo(map);
+
+  L.marker([32.043417, 118.859500], {
+    //设置图标
+    icon: icon,
+    rotationAngle: 45
+  }).addTo(map);
+
+  L.marker([32.053417, 118.879500], {
+    //设置图标
+    icon: icon,
+    rotationAngle: 100
+  }).addTo(map);
+
 
   console.log(L.control.layers);
 

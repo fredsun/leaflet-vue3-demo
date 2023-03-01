@@ -7,3 +7,4 @@ npm install axios --save
 npm install localforage --save
 npm install leaflet --save
 npm install leaflet.markercluster
+npm install leaflet-rotatedmarker --save
