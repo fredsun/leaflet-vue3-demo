@@ -2,6 +2,9 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css'
 import { getMapKeystore } from '../utils/keystore'
+
+import {CanvasMarkerLayer} from '../utils/leaflet.canvasmarker';
+
 import { onMounted, defineProps, watch, inject, ref } from 'vue'
 // import axios from 'axios';
 import { apiGetUserInfo } from '../apis/user';
@@ -83,32 +86,40 @@ const initMap = () => {
     fillOpacity: 1
   }).addTo(map);
 
+  var ciLayer = L.canvasMarkerLayer({
+    collisionFlg: false
+  }).addTo(map);
   //绘制旋转图标
   var icon = L.icon({
     //图标地址
     iconUrl: "./src/assets/icon_plane.png",
     //图标大小
     iconSize: [38, 38],
-    iconAnchor:[15,63]
+    iconAnchor: [19, 19]
   })
-  //添加飞机标注
-  L.marker([32.053417, 118.869500], {
+
+
+  // const canvasLayer = new CanvasIconLayer({});
+  var plane1 = L.marker([32.053417, 118.869500], {
     //设置图标
     icon: icon,
     rotationAngle: 90
-  }).addTo(map);
+  });
 
-  L.marker([32.043417, 118.859500], {
+  var plane2 = L.marker([32.043417, 118.859500], {
     //设置图标
     icon: icon,
     rotationAngle: 45
-  }).addTo(map);
+  });
 
-  L.marker([32.053417, 118.879500], {
+  var plane3 = L.marker([32.053417, 118.879500], {
     //设置图标
     icon: icon,
     rotationAngle: 100
-  }).addTo(map);
+  });
+  const marks = [plane1, plane2, plane3]
+  ciLayer.addLayers(marks)
+
 
 
   console.log(L.control.layers);

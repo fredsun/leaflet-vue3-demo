@@ -8,3 +8,6 @@ npm install localforage --save
 npm install leaflet --save
 npm install leaflet.markercluster
 npm install leaflet-rotatedmarker --save
+npm install echarts vue-echarts --save
+//for leaflet-canvas-marker
+npm install rbush
