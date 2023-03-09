@@ -331,7 +331,7 @@ function drawGeoJSONBeijing() {
             "color": "#00f",
             "weight": 2,
             "opacity": 0.5,
-            "fillColor": '#0260ff',
+            "fillColor": '#ff0000',
             "fillOpacity": 0.5,
             "stroke": 'red',
           };
