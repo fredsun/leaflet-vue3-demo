@@ -258,17 +258,85 @@ function drawGeoJSONBeijing() {
   //   }
   // }
   console.log(`cleandata`, jsonData);
-  var myStyle = {
-    "color": "#00f",
-    "weight": 2,
-    "opacity": 0.5,
-    "fillColor": '#ff2600',
-    "fillOpacity": 0.5,
-    "stroke": 'red',
-  };
+  // var myStyle = {
+  //   "color": "#00f",
+  //   "weight": 2,
+  //   "opacity": 0.5,
+  //   "fillColor": '#ff2600',
+  //   "fillOpacity": 0.5,
+  //   "stroke": 'red',
+  // };
   console.log(`afterclean`, jsonData);
   L.geoJSON(jsonData, {
-    style: myStyle,
+    style: function (feature) {
+      console.log(`feature`, feature.properties.CNAME);
+      switch (feature.properties.CNAME) {
+        case '东城区':
+          return {
+            "color": "#00f",
+            "weight": 2,
+            "opacity": 0.5,
+            "fillColor": '#0000ff',
+            "fillOpacity": 0.5,
+            "stroke": 'red',
+          };
+        case '丰台区':
+          return {
+            "color": "#00f",
+            "weight": 2,
+            "opacity": 0.5,
+            "fillColor": '#00ff00',
+            "fillOpacity": 0.5,
+            "stroke": 'red',
+          };
+        case '西城区':
+          return {
+            "color": "#00f",
+            "weight": 2,
+            "opacity": 0.5,
+            "fillColor": '#095325',
+            "fillOpacity": 0.5,
+            "stroke": 'red',
+          };
+        case '石景山区':
+          return {
+            "color": "#00f",
+            "weight": 2,
+            "opacity": 0.5,
+            "fillColor": '#464336',
+            "fillOpacity": 0.5,
+            "stroke": 'red',
+          };
+        case '通州区':
+          return {
+            "color": "#00f",
+            "weight": 2,
+            "opacity": 0.5,
+            "fillColor": '#636536',
+            "fillOpacity": 0.5,
+            "stroke": 'red',
+          };
+        case '海淀区':
+          return {
+            "color": "#00f",
+            "weight": 2,
+            "opacity": 0.5,
+            "fillColor": '#642562',
+            "fillOpacity": 0.5,
+            "stroke": 'red',
+          };
+
+        default:
+          return {
+            "color": "#00f",
+            "weight": 2,
+            "opacity": 0.5,
+            "fillColor": '#0260ff',
+            "fillOpacity": 0.5,
+            "stroke": 'red',
+          };
+      }
+    }
   }).addTo(map);
 }
 
