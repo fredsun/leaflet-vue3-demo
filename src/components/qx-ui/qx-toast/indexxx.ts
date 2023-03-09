@@ -17,7 +17,7 @@ export interface ResultParams {
 const Toast = (options: IProps):ResultParams => {
     const container = document.createElement('div')
     const opt = {...defaultOpt,...options}
-    console.log(`opt`,opt)
+    // console.log(`opt`,opt)
     const vm = createVNode(toastTemplate, opt) // 创建vNode
     render(vm, container)
     document.body.appendChild(container)       // 添加到body上

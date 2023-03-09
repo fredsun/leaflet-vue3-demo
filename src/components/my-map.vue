@@ -14,6 +14,7 @@ import "leaflet.markercluster/dist/MarkerCluster.css"
 import "leaflet.markercluster/dist/MarkerCluster.Default.css"
 import "leaflet.markercluster";
 import "leaflet-rotatedmarker"
+import "../utils/L.Graticule";
 import QXToast from './qx-ui/qx-toast/qx-toast.vue';
 let tdtKey = getMapKeystore()
 var map;
@@ -269,7 +270,6 @@ function drawGeoJSONBeijing() {
   console.log(`afterclean`, jsonData);
   L.geoJSON(jsonData, {
     style: function (feature) {
-      console.log(`feature`, feature.properties.CNAME);
       switch (feature.properties.CNAME) {
         case '东城区':
           return {
@@ -342,7 +342,7 @@ function drawGeoJSONBeijing() {
 
 //绘制canvas点群
 function drawCanvasPoints() {
-  console.log(`data`, getData());
+  // console.log(`data`, getData());
   var myCustomCanvasDraw = function () {
     this.onLayerDidMount = function () {
       // -- prepare custom drawing    
@@ -356,7 +356,7 @@ function drawCanvasPoints() {
     };
     this.onDrawLayer = function (info) {
       var canvasData = getData()
-      console.log(`info`, info);
+      // console.log(`info`, info);
       // -- custom  draw
       var ctx = info.canvas.getContext('2d');
       ctx.clearRect(0, 0, info.canvas.width, info.canvas.height);
@@ -371,7 +371,170 @@ function drawCanvasPoints() {
           ctx.closePath();
         }
       }
-      console.log(`draw`);
+      var lnglat1 = [32.034404, 118.824663];
+      var lnglat2 = [35.903596, 111.679377];
+      var lnglat3 = [27.354039, 109.950031];
+      var lnglat4 = [33.626467, 100.935355];
+      var dot1 = info.layer._map.latLngToContainerPoint([lnglat1[0], lnglat1[1]]);
+      var dot2 = info.layer._map.latLngToContainerPoint([lnglat2[0], lnglat2[1]]);
+      var dot3 = info.layer._map.latLngToContainerPoint([lnglat3[0], lnglat3[1]]);
+      var dot4 = info.layer._map.latLngToContainerPoint([lnglat4[0], lnglat4[1]]);
+      // console.log(`latlng1`, dot1.x + `,` + dot1.y);
+      // console.log(`latlng2`, dot2.x + `,` + dot2.y);
+      ctx.beginPath();
+      ctx.moveTo(dot1.x, dot1.y);
+      ctx.lineTo(dot2.x, dot2.y);
+      ctx.lineTo(dot3.x, dot3.y);
+      ctx.lineTo(dot4.x, dot4.y);
+      ctx.quadraticCurveTo(dot1.x, dot1.y, dot2.x, dot2.y)
+      ctx.stroke();
+      ctx.closePath();
+      ctx.fillStyle = "green";
+      ctx.fillText("text", dot1.x, dot1.y)
+      ctx.fillStyle = "green";
+      ctx.fillText("text", dot2.x, dot2.y)
+      ctx.fillStyle = "blue";
+      ctx.fillText("text2", dot3.x, dot3.y)
+      console.log(`lnglat2: ` + lnglat2);
+      console.log(`dot2`, dot2.x, dot2.y);
+
+      var latlngDatas = [
+        // [0,0],
+        [74.112097, 28.75764],
+        [82.942799, 41.298646],
+        [93.981177, 33.56488],
+        [100.015491, 40.629238],
+        [108.846193, 30.302207],
+        [120.178928, 40.517005],
+        [162.860657, 22.21681],
+        // [180,90]
+      ]
+
+
+      // var dotDatas = [];
+      // for (let index = 0; index < latlngDatas.length; index++) {
+      //   const element = latlngDatas[index];
+      //   // console.log(`element`, element);
+      //   // console.log(`element`, element[0]);
+      //   // console.log(`element`, element[1]);
+      //   var dot = info.layer._map.latLngToContainerPoint([latlngDatas[index][1], latlngDatas[index][0]]);
+      //   dotDatas.push([dot.x, dot.y]);
+      // }
+      for (let index = 0; index < latlngDatas.length; index++) {
+        const element = latlngDatas[index];
+        element.reverse();
+      }
+
+      var datas = latlngDatas;
+      // for (let index = 0; index < 50; index++) {
+      //     datas.push([Math.random() * 200, Math.random() * 300])
+      // }
+      console.log(`latlngDatas[0]`, latlngDatas[0]);
+      // console.log(`dotDatas[0]`, dotDatas[0]);
+      var height = 360;
+      var width = 180;
+      // var height = info.canvas.height;
+      // var width = info.canvas.width;
+      console.log(`canvas.height`, height);
+      console.log(`canvas.width`, width);
+      var dataXMax = datas[0][0],
+        dataXMin = datas[0][1],
+        dataYMax = datas[0][0],
+        dataYMin = datas[0][1],
+        diffY = 0,
+        diffX = 0;
+      console.log(`dataXMax`, dataXMax);
+      console.log(`dataXMin`, dataXMin);
+      datas.forEach(function (obj, i) {
+        if (dataXMax < obj[0]) dataXMax = obj[0]
+        if (dataXMin > obj[0]) dataXMin = obj[0]
+        if (dataYMax < obj[1]) dataYMax = obj[1]
+        if (dataYMin > obj[1]) dataYMin = obj[1]
+      })
+      console.log(`dataXMax`, dataXMax);
+      console.log(`dataXMin`, dataXMin);
+      diffY = height / (dataYMax - dataYMin)
+      diffX = width / (dataXMax - dataXMin)
+      console.log(`diffY`, diffY);
+      console.log(`diffX`, diffX);
+      console.log(`datas[0][0]`, datas[0][0]);
+      ctx.beginPath();
+      ctx.strokeStyle = "#000"
+      ctx.fillStyle = "#000"
+      ctx.lineWidth = 5.0;
+      ctx.fillRect(0, width, 0, height)
+      ctx.lineTo(datas[0][0], [0][1]);
+      datas.forEach(function (item, index) { //找到前一个点到下一个点中间的控制点
+        var scale = 0.1
+        if (index === 0) {
+          ctx.lineTo(nowX, nowY)
+          return
+        }
+        if (index === 1) {
+          var last1X = Math.floor(width - diffX * (datas[index - 1][0] - dataXMin)),
+            last1Y = Math.floor(height - diffY * (datas[index - 1][1] - dataYMin)),
+            nowX = Math.floor(width - diffX * (datas[index][0] - dataXMin)),
+            nowY = Math.floor(height - diffY * (datas[index][1] - dataYMin)),
+            nextX = Math.floor(width - diffY * (datas[index + 1][0] - dataXMin)),
+            nextY = Math.floor(height - diffY * (datas[index + 1][1] - dataYMin)),
+            cAx = last1X + (nowX - 0) * scale,
+            cAy = last1Y + (nowY - self.height) * scale,
+            cBx = nowX - (nextX - last1X) * scale,
+            cBy = nowY - (nextY - last1Y) * scale;
+          return;
+        }
+        if (index === datas.length - 1) {
+          var scale = 0.1
+          var last1X = Math.floor(width - diffX * (datas[index - 1][0] - dataXMin)),
+            last1Y = Math.floor(height - diffY * (datas[index - 1][1] - dataYMin)),
+            last2X = Math.floor(width - diffX * (datas[index - 2][0] - dataXMin)),
+            last2Y = Math.floor(height - diffY * (datas[index - 2][1] - dataYMin)),
+            nowX = Math.floor(width - diffX * (datas[index][0] - dataXMin)),
+            nowY = Math.floor(height - diffY * (datas[index][1] - dataYMin)),
+            cAx = last1X + (nowX - last2X) * scale,
+            cAy = last1Y + (nowY - last2Y) * scale,
+            cBx = nowX - (nowX - last1X) * scale,
+            cBy = nowY - (nowY - last1Y) * scale;
+          return;
+        }
+        // console.log(`index`, index);
+        var last1X = Math.floor(width - diffX * (datas[index - 1][0] - dataXMin)),
+          last1Y = Math.floor(height - diffY * (datas[index - 1][1] - dataYMin)),
+          last2X = Math.floor(width - diffX * (datas[index - 2][0] - dataXMin)),
+          last2Y = Math.floor(height - diffY * (datas[index - 2][1] - dataYMin)),
+          nowX = Math.floor(width - diffX * (datas[index][0] - dataXMin)),
+          nowY = Math.floor(height - diffY * (datas[index][1] - dataYMin)),
+          nextX = Math.floor(width - diffY * (datas[index + 1][0] - dataXMin)),
+          nextY = Math.floor(height - diffY * (datas[index + 1][1] - dataYMin)),
+          cAx = last1X + (nowX - last2X) * scale,
+          cAy = last1Y + (nowY - last2Y) * scale,
+          cBx = nowX - (nextX - last1X) * scale,
+          cBy = nowY - (nextY - last1Y) * scale;
+          var latA = info.layer._map.latLngToContainerPoint([cAx,cAy]);
+          var latB = info.layer._map.latLngToContainerPoint([cBx,cBy]);
+          var now = info.layer._map.latLngToContainerPoint([nowX,nowY]);
+          console.log(`now`, now.x, now.y);
+          ctx.bezierCurveTo(
+            latA.x,
+            latA.y,
+            latB.x,
+            latB.y,
+            now.x,
+            now.y
+          )
+        // ctx.bezierCurveTo(
+        //   cAx,
+        //   cAy,
+        //   cBx,
+        //   cBy,
+        //   nowX,
+        //   nowY);
+        // console.log(`nowx`, nowX);
+        // console.log(`nowy`, nowY);
+      })
+      ctx.stroke();
+      ctx.closePath();
+      L.graticule().addTo(map);
     }
   }
   myCustomCanvasDraw.prototype = new L.CanvasLayer(); // -- setup prototype 
