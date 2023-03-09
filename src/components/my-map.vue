@@ -9,6 +9,7 @@ import { onMounted, defineProps, watch, inject, ref } from 'vue'
 // import axios from 'axios';
 import { apiGetUserInfo } from '../apis/user';
 import jsonData from '../../public/js/BEIJING_country.json'
+import guoGeoJsonData from '../utils/data/guoGeoData.json'
 import "leaflet.markercluster/dist/MarkerCluster.css"
 import "leaflet.markercluster/dist/MarkerCluster.Default.css"
 import "leaflet.markercluster";
@@ -37,7 +38,7 @@ onMounted(() => {
   initMap()
   // fetchAPI()
   // fetchGetInfo()
-  fetchGeoJson()
+  // drawGeoJsonPolyline();
 })
 
 const initMap = () => {
@@ -103,6 +104,8 @@ const initMap = () => {
   //   alert("地图被单击了！点击位置为：" + coordinate);
   // })
 
+
+  drawGeoJSONBeijing();
 }
 
 // 模拟点击
@@ -122,7 +125,7 @@ function drawSimple() {
     fillOpacity: 0.5
   }).addTo(map)
   //添加标记
-  L.marker([32.053417, 118.849672]).addTo(map)
+  L.marker([118.849672, 32.053417]).addTo(map)
   L.marker([32.023117, 118.049272]).addTo(map)
   L.marker([32.064417, 118.449642]).addTo(map)
   L.marker([32.413117, 118.849679]).addTo(map)
@@ -179,19 +182,19 @@ function drawPlane() {
 
 
   // const canvasLayer = new CanvasIconLayer({});
-  var plane1 = L.marker([32.053417, 118.869500], {
+  var plane1 = L.marker([118.869500, 32.053417], {
     //设置图标
     icon: icon,
     rotationAngle: 90
   });
 
-  var plane2 = L.marker([32.043417, 118.859500], {
+  var plane2 = L.marker([118.859500, 32.043417], {
     //设置图标
     icon: icon,
     rotationAngle: 45
   });
 
-  var plane3 = L.marker([32.053417, 118.879500], {
+  var plane3 = L.marker([118.879500, 32.053417], {
     //设置图标
     icon: icon,
     rotationAngle: 100
@@ -201,7 +204,7 @@ function drawPlane() {
 }
 
 //获取天地图区域geojson
-function fetchGeoJson() {
+function drawGeoJsonPolyline() {
   var featureJsons = new Array()
   featureJsons.concat(jsonData.features)
   console.log(drawnItems)
@@ -229,6 +232,44 @@ function fetchGeoJson() {
       map.addLayer(drawnItems)
     }
   }
+}
+
+//直接根据geojson绘制
+function drawGeoJSONBeijing() {
+  // var featureJsons = new Array();
+  //合并数组，即赋值
+  // featureJsons.concat(jsonData.features)
+  // console.log(`cleandata`,featureJsons.length);
+  // console.log(featureJsons.length)
+
+  // console.log(`beforeClean`, jsonData);
+  // for (var i = 0; i < jsonData.features.length; i++) {  
+  //   for (var j = 0; j < jsonData.features[i].geometry.coordinates.length; j++) {
+  //     for (let k = 0; k < jsonData.features[i].geometry.coordinates[j].length; k++) {
+  //       //删除北京数据后的0
+  //       jsonData.features[i].geometry.coordinates[j][k].pop()
+  //       //latlng对调，适配天地图
+  //       // console.log(`lnglat`,arrayLngLat);
+  //       jsonData.features[i].geometry.coordinates[j][k].reverse()
+  //       // console.log(`latlng`,arrayLngLat);
+  //       // console.log(`arrayLngLatZero`, arrayCoor[j]);
+  //       // console.log('arrayLngLat', arrayLngLat)
+  //     }
+  //   }
+  // }
+  console.log(`cleandata`, jsonData);
+  var myStyle = {
+    "color": "#00f",
+    "weight": 2,
+    "opacity": 0.5,
+    "fillColor": '#ff2600',
+    "fillOpacity": 0.5,
+    "stroke": 'red',
+  };
+  console.log(`afterclean`, jsonData);
+  L.geoJSON(jsonData, {
+    style: myStyle,
+  }).addTo(map);
 }
 
 //绘制canvas点群
