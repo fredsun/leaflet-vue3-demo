@@ -70,7 +70,7 @@ const initMap = () => {
 
   drawSimple();
   drawPlane();
-  fetchGeoJson();
+
   drawCanvasPoints();
   console.log(L.control.layers);
 
@@ -204,7 +204,7 @@ function drawPlane() {
 function fetchGeoJson() {
   var featureJsons = new Array()
   featureJsons.concat(jsonData.features)
-  console.log(jsonData.features.length)
+  console.log(drawnItems)
   // console.log(featureJsons.length)
   for (var i = 0; i < jsonData.features.length; i++) {
     // console.log(jsonData.features[i]);
