@@ -2,9 +2,9 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css'
 import { getMapKeystore } from '../utils/keystore'
-
-import {CanvasMarkerLayer} from '../utils/leaflet.canvasmarker';
-
+import "../utils/canvas/L.CanvasLayer";
+import { getData } from "../utils/data"
+import { CanvasMarkerLayer } from '../utils/leaflet.canvasmarker';
 import { onMounted, defineProps, watch, inject, ref } from 'vue'
 // import axios from 'axios';
 import { apiGetUserInfo } from '../apis/user';
@@ -18,7 +18,7 @@ let tdtKey = getMapKeystore()
 var map;
 const $toast = inject('$toast')
 let mapLayer = {};
-//绘制图层
+//绘制geoJson图层
 var drawnItems = new L.FeatureGroup();
 
 const props = defineProps({
@@ -32,6 +32,13 @@ watch(props, (newValue, oldValue) => {
 })
 console.log(props.title);
 console.log(`11111`);
+
+onMounted(() => {
+  initMap()
+  // fetchAPI()
+  // fetchGetInfo()
+  fetchGeoJson()
+})
 
 const initMap = () => {
   //天地图矢量图层
@@ -61,6 +68,53 @@ const initMap = () => {
     layers: [vecLayerGroup]
   })
 
+  drawSimple();
+  drawPlane();
+  fetchGeoJson();
+  drawCanvasPoints();
+  console.log(L.control.layers);
+
+  L.control.layers(baseLayers, null).addTo(map);
+  //监听control图层变化
+  for (let node of document.querySelectorAll('.leaflet-control-layers-base label')) {
+    mapLayer[node.innerText.trim()] = node.querySelector('input')
+  }
+
+  // //补充地图基层变化提示
+  // map.on('baselayerchange', function (e) {
+  //   //弹框提示
+  //   alert("基图层改变了！");
+  // })
+  //地图zoom监听
+  map.on('zoom', function (e) {
+    $toast({
+      value: 'zoom change',
+      duration: 2000, // 如果大于0则不必使用destory方法
+      background: '#000',
+      color: '#fff'
+    })
+  })
+
+  // //地图单击监听
+  // map.on('click', function (e) {
+  //   //获取点击位置的坐标
+  //   var coordinate = [e.latlng.lat, e.latlng.lng];
+  //   //弹框提示点击位置的坐标
+  //   alert("地图被单击了！点击位置为：" + coordinate);
+  // })
+
+}
+
+// 模拟点击
+function changeMapType(value) {
+  console.log(`change` + value)
+  // this.mapType = value
+  mapLayer[value].click()
+}
+
+
+
+function drawSimple() {
   //添加圆圈
   L.circle([32.063417, 118.849672], 500, {
     color: 'red',
@@ -85,7 +139,32 @@ const initMap = () => {
     //透明度
     fillOpacity: 1
   }).addTo(map);
+}
 
+//模拟网络请求
+function fetchAPI() {
+  const $axios = inject('$axios')
+  console.log('axios' + $axios)
+  $axios.get('https://echo.hoppscotch.io').then((resp) => {
+    console.log(resp.data)
+  }).catch((err) => {
+    console.log(err)
+  })
+}
+
+//模拟封装接口
+function fetchGetInfo() {
+  const param = {
+    userID: '1001',
+    userName: 'aaa',
+  }
+  apiGetUserInfo(param).then(res => {
+    console.log(res)
+  })
+}
+
+//绘制3个小飞机
+function drawPlane() {
   var ciLayer = L.canvasMarkerLayer({
     collisionFlg: false
   }).addTo(map);
@@ -119,17 +198,10 @@ const initMap = () => {
   });
   const marks = [plane1, plane2, plane3]
   ciLayer.addLayers(marks)
+}
 
-
-
-  console.log(L.control.layers);
-
-  L.control.layers(baseLayers, null).addTo(map);
-
-  for (let node of document.querySelectorAll('.leaflet-control-layers-base label')) {
-    mapLayer[node.innerText.trim()] = node.querySelector('input')
-  }
-
+//获取天地图区域geojson
+function fetchGeoJson() {
   var featureJsons = new Array()
   featureJsons.concat(jsonData.features)
   console.log(jsonData.features.length)
@@ -146,7 +218,7 @@ const initMap = () => {
         var arrayLngLat = arrayLngLatZero[k]
         arrayLngLat.pop()
         arrayLngLat.reverse()
-        console.log('arrayLngLat', arrayLngLat)
+        // console.log('arrayLngLat', arrayLngLat)
         // var pol{{yline = L.polyline([[32.09438, 118.763722], [32.096093, 118.825238], [32.065009, 118.848235], [32.04983, 118.783844], [32.064029, 118.718304]], {
       }
       var polyline = L.polyline(arrayLngLatZero, {
@@ -156,85 +228,48 @@ const initMap = () => {
       }).addTo(drawnItems);
       map.addLayer(drawnItems)
     }
-
   }
-
-  // //补充地图基层变化提示
-  // map.on('baselayerchange', function (e) {
-  //   //弹框提示
-  //   alert("基图层改变了！");
-  // })
-  //地图zoom监听
-  map.on('zoom', function (e) {
-    //弹框提示
-    // alert("地图级数改变！");
-    // $toast.show(' 添加成功')
-    // showModal = true
-
-
-    // $toast.open("1000")
-    // setTimeout(() => {
-    //   $toast.close()
-    // }, 2000)
-
-    $toast({
-      value: 'zoom change',
-      duration: 2000, // 如果大于0则不必使用destory方法
-      background: '#000',
-      color: '#fff'
-    })
-  })
-
-  // //地图单击监听
-  // map.on('click', function (e) {
-  //   //获取点击位置的坐标
-  //   var coordinate = [e.latlng.lat, e.latlng.lng];
-  //   //弹框提示点击位置的坐标
-  //   alert("地图被单击了！点击位置为：" + coordinate);
-  // })
-
-  console.log("map", map)
 }
 
-// 模拟点击
-function changeMapType(value) {
-  console.log(`change` + value)
-  // this.mapType = value
-  mapLayer[value].click()
-}
-onMounted(() => {
-  initMap()
-  // fetchAPI()
-  // fetchGetInfo()
-  fetchGeoJson()
-})
-
-//模拟网络请求
-function fetchAPI() {
-  const $axios = inject('$axios')
-  console.log('axios' + $axios)
-  $axios.get('https://echo.hoppscotch.io').then((resp) => {
-    console.log(resp.data)
-  }).catch((err) => {
-    console.log(err)
-  })
-}
-
-//模拟封装接口
-function fetchGetInfo() {
-  const param = {
-    userID: '1001',
-    userName: 'aaa',
+//绘制canvas点群
+function drawCanvasPoints() {
+  console.log(`data`, getData());
+  var myCustomCanvasDraw = function () {
+    this.onLayerDidMount = function () {
+      // -- prepare custom drawing    
+    };
+    this.onLayerWillUnmount = function () {
+      // -- custom cleanup    
+    };
+    this.setData = function (data) {
+      // -- custom data set
+      this.needRedraw(); // -- call to drawLayer
+    };
+    this.onDrawLayer = function (info) {
+      var canvasData = getData()
+      console.log(`info`, info);
+      // -- custom  draw
+      var ctx = info.canvas.getContext('2d');
+      ctx.clearRect(0, 0, info.canvas.width, info.canvas.height);
+      ctx.fillStyle = "rgba(255,116,0, 0.2)";
+      for (var i = 0; i < canvasData.length; i++) {
+        var d = canvasData[i];
+        if (info.bounds.contains([d[0], d[1]])) {
+          var dot = info.layer._map.latLngToContainerPoint([d[0], d[1]]);
+          ctx.beginPath();
+          ctx.arc(dot.x, dot.y, 3, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.closePath();
+        }
+      }
+      console.log(`draw`);
+    }
   }
-  apiGetUserInfo(param).then(res => {
-    console.log(res)
-  })
+  myCustomCanvasDraw.prototype = new L.CanvasLayer(); // -- setup prototype 
+  var myLayer = new myCustomCanvasDraw();
+  myLayer.addTo(map);
 }
 
-//获取天地图区域geojson
-function fetchGeoJson() {
-
-}
 </script>
 
 <template>
