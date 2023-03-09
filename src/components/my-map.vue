@@ -369,9 +369,32 @@ function drawCanvasPoints() {
           ctx.arc(dot.x, dot.y, 3, 0, Math.PI * 2);
           ctx.fill();
           ctx.closePath();
+
         }
       }
       console.log(`draw`);
+      // ctx.quadraticCurveTo(32.034404, 118.824663, 31.908939, 118.733826);
+      // ctx.quadraticCurveTo(32.057909, 118.682084, 32.214456, 118.835012);
+      // ctx.quadraticCurveTo(31.96189, 118.145113, 31.647654, 118.053127);
+      // ctx.quadraticCurveTo(31.523627, 119.04888, 31.511807, 119.879058);
+      // var dots = [[118.824663, 32.034404], [113.751372, 10.81264]]
+      // ctx.fillStyle = "#000"
+      // ctx.lineWidth = 5.0;
+      // ctx.strokeStyle = "#cc0000"
+      // ctx.beginPath();
+      // var dot = info.layer._map.latLngToContainerPoint(dots(0));
+      // ctx.moveTo(dot.x, dot.y);
+      // var dot2 = info.layer._map.latLngToContainerPoint(dots(1));
+      // ctx.lineTo(dot2.x, dot2.y);
+      // ctx.moveTo(32.034404, 118.824663);
+      // ctx.lineTo(31.81264, 113.751372);
+
+      // ctx.quadraticCurveTo(118.824663, 32.034404, 118.733826, 31.908939);
+      // ctx.quadraticCurveTo(118.682084, 32.057909, 118.835012, 32.214456);
+      // ctx.quadraticCurveTo(118.145113, 31.96189, 118.053127, 31.647654);
+      // ctx.quadraticCurveTo(119.04888, 31.523627, 119.879058, 31.511807);
+      // ctx.stroke();
+      // ctx.closePath();
     }
   }
   myCustomCanvasDraw.prototype = new L.CanvasLayer(); // -- setup prototype 
