@@ -134,6 +134,13 @@ function drawSimple() {
   L.marker([32.163417, 118.849660]).addTo(map)
   L.marker([32.033417, 118.549671]).addTo(map)
 
+  L.marker([39.45177228, 116.37236525]).addTo(map)
+  L.marker([39.45402584, 116.37236525]).addTo(map)
+  L.marker([39.45402584, 116.37529411999999]).addTo(map)
+  L.marker([39.45177228, 116.37529411999999]).addTo(map)
+  L.marker([39.45177228, 116.37236525]).addTo(map)
+
+
   //添加点
   L.circle([32.053417, 118.869500], {
     //点半径
@@ -512,18 +519,18 @@ function drawCanvasPoints() {
           cAy = last1Y + (nowY - last2Y) * scale,
           cBx = nowX - (nextX - last1X) * scale,
           cBy = nowY - (nextY - last1Y) * scale;
-          var latA = info.layer._map.latLngToContainerPoint([cAx,cAy]);
-          var latB = info.layer._map.latLngToContainerPoint([cBx,cBy]);
-          var now = info.layer._map.latLngToContainerPoint([nowX,nowY]);
-          console.log(`now`, now.x, now.y);
-          ctx.bezierCurveTo(
-            latA.x,
-            latA.y,
-            latB.x,
-            latB.y,
-            now.x,
-            now.y
-          )
+        var latA = info.layer._map.latLngToContainerPoint([cAx, cAy]);
+        var latB = info.layer._map.latLngToContainerPoint([cBx, cBy]);
+        var now = info.layer._map.latLngToContainerPoint([nowX, nowY]);
+        console.log(`now`, now.x, now.y);
+        ctx.bezierCurveTo(
+          latA.x,
+          latA.y,
+          latB.x,
+          latB.y,
+          now.x,
+          now.y
+        )
         // ctx.bezierCurveTo(
         //   cAx,
         //   cAy,
@@ -536,7 +543,13 @@ function drawCanvasPoints() {
       })
       ctx.stroke();
       ctx.closePath();
-      L.graticule().addTo(map);
+      ctx.draw
+      L.graticule({
+        style: {
+          color: '#f00',
+          weight: 0.1
+        }
+      }).addTo(map);
 
     }
   }
