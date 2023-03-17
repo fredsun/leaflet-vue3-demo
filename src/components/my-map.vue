@@ -17,7 +17,7 @@ import "leaflet-rotatedmarker"
 import "../utils/L.Graticule";
 import "../utils/leaflet-omnivore.min.js"//快速读取和转化其他格式为geojson
 import "../utils/Leaflet.VectorGrid.bundled.js"
-import {createFakerData }from "../utils/createFakerData"
+import { createFakerData } from "../utils/createFakerData"
 // import "../utils/leaflet.featuregroup.subgroup.js"
 import "leaflet.featuregroup.subgroup"
 import QXToast from './qx-ui/qx-toast/qx-toast.vue';
@@ -44,6 +44,8 @@ var rawGridLayer = omnivore.geojson(
 );
 rawGridLayer.on("ready", function () {
   grids = rawGridLayer.toGeoJSON();
+  // var fakeDate = createFakerData();
+  // console.log(`fakeData`, fakeDate);
   buildMapGrid();
 });
 
@@ -54,18 +56,27 @@ function buildMapGrid() {
     .slicer(grids, {
       rendererFactory: L.canvas.tile,
       vectorTileLayerStyles: {
-        sliced: {
-          fillColor: "#515151",
-          fillOpacity: 0.6,
-          color: "#515151",
-          weight: 0.3
+        sliced: function(properties, zoom){
+          var id = properties.colorId;
+          return{
+            fill:true,
+            fillColor:                 
+              id ===0?"#228B22":
+              id ===1?"#FFFF00": 
+              id ===2?"#A52A2A":"000000",
+              fillOpacity: 0.6,
+          color: "#006400",
+          weight: 0.3          
+            }               
         },
+
         interactive: true
       },
       maxZoom: 22,
       indexMaxZoom: 5, // max zoom in the initial tile index
       interactive: true,
       getFeatureId: function (feature) {
+        console.log(`dogetFeatureId`);
         return feature.properties["fnid"];
       },
       zIndex: 230
