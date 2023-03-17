@@ -15,6 +15,11 @@ import "leaflet.markercluster/dist/MarkerCluster.Default.css"
 import "leaflet.markercluster";
 import "leaflet-rotatedmarker"
 import "../utils/L.Graticule";
+import "../utils/leaflet-omnivore.min.js"//快速读取和转化其他格式为geojson
+import "../utils/Leaflet.VectorGrid.bundled.js"
+import {createFakerData }from "../utils/createFakerData"
+// import "../utils/leaflet.featuregroup.subgroup.js"
+import "leaflet.featuregroup.subgroup"
 import QXToast from './qx-ui/qx-toast/qx-toast.vue';
 let tdtKey = getMapKeystore()
 var map;
@@ -28,18 +33,88 @@ const props = defineProps({
   default: ""
 })
 
-watch(props, (newValue, oldValue) => {
-  console.log(`watch l` + props.title);
-  changeMapType(props.title)
-})
-console.log(props.title);
-console.log(`11111`);
+var grids,
+  selectedGridId = 0;
+// var gridLayer;
+var subLayerParent = L.markerClusterGroup();
+var gridLayer = L.featureGroup.subGroup(subLayerParent);
+var rawGridLayer = omnivore.geojson(
+  // "./src/data/ss_grid_bejing_extracted.geojson"
+  "./src/data/fake_data.geojson"
+);
+rawGridLayer.on("ready", function () {
+  grids = rawGridLayer.toGeoJSON();
+  buildMapGrid();
+});
+
+
+function buildMapGrid() {
+  console.log("buildMapGrid");
+  gridLayer = L.vectorGrid
+    .slicer(grids, {
+      rendererFactory: L.canvas.tile,
+      vectorTileLayerStyles: {
+        sliced: {
+          fillColor: "#515151",
+          fillOpacity: 0.6,
+          color: "#515151",
+          weight: 0.3
+        },
+        interactive: true
+      },
+      maxZoom: 22,
+      indexMaxZoom: 5, // max zoom in the initial tile index
+      interactive: true,
+      getFeatureId: function (feature) {
+        return feature.properties["fnid"];
+      },
+      zIndex: 230
+    })
+    .addTo(map);
+  console.log(`gridclick<14`);
+  gridLayer.on("click", function (e) {
+    if (map.getZoom() < 14) {
+      console.log(`gridclick<14`);
+    } else {
+      console.log(`gridclick>14`);
+      console.log(e);
+      if (e.layer.feature) {
+        var prop = e.layer.feature.properties;
+        //var latlng = [e.latlng.lat,e.latlng.lng];
+      } else {
+        var prop = e.layer.properties;
+        //var latlng = [Number(parcel.y), Number(parcel.x)];
+        var latlng = e.latlng;
+        var gridPopup = L.popup({ maxWidth: 1500, maxHeight: 400 })
+          .setLatLng(latlng)
+          .setContent(JSON.stringify(prop))
+          .openOn(map);
+        gridPopup.bringToFront();
+      }
+      // settimeout otherwise when map click fires it will override this color change
+      // clear selection if slect on the same layer
+      if (selectedGridId != 0) {
+        gridLayer.resetFeatureStyle(selectedGridId);
+      }
+      selectedGridId = prop["fnid"];
+      setTimeout(function () {
+        gridLayer.setFeatureStyle(
+          selectedGridId,
+          {
+            color: "red"
+          },
+          100
+        );
+      });
+    }
+  });
+
+}
+
+
 
 onMounted(() => {
   initMap()
-  // fetchAPI()
-  // fetchGetInfo()
-  // drawGeoJsonPolyline();
 })
 
 const initMap = () => {
@@ -70,10 +145,10 @@ const initMap = () => {
     layers: [vecLayerGroup]
   })
 
-  drawSimple();
-  drawPlane();
 
-  drawCanvasPoints();
+  map.createPane("gridsPane");
+  map.getPane("gridsPane").style.zIndex = 650;
+
   console.log(L.control.layers);
 
   L.control.layers(baseLayers, null).addTo(map);
@@ -82,11 +157,11 @@ const initMap = () => {
     mapLayer[node.innerText.trim()] = node.querySelector('input')
   }
 
-  // //补充地图基层变化提示
-  // map.on('baselayerchange', function (e) {
-  //   //弹框提示
-  //   alert("基图层改变了！");
-  // })
+  //补充地图基层变化提示
+  map.on('baselayerchange', function (e) {
+    //弹框提示
+    console.log("基图层改变了！", e);
+  })
   //地图zoom监听
   map.on('zoom', function (e) {
     $toast({
@@ -106,7 +181,12 @@ const initMap = () => {
   // })
 
 
-  drawGeoJSONBeijing();
+  subLayerParent.addTo(map);
+  subLayerParent.setZIndex(9999);
+  // drawGeoJSONBeijing();
+  // drawSimple();
+  drawPlane();
+  drawCanvasPoints();
 }
 
 // 模拟点击
@@ -115,8 +195,6 @@ function changeMapType(value) {
   // this.mapType = value
   mapLayer[value].click()
 }
-
-
 
 function drawSimple() {
   //添加圆圈
@@ -216,24 +294,17 @@ function drawGeoJsonPolyline() {
   var featureJsons = new Array()
   featureJsons.concat(jsonData.features)
   console.log(drawnItems)
-  // console.log(featureJsons.length)
   for (var i = 0; i < jsonData.features.length; i++) {
-    // console.log(jsonData.features[i]);
-
     var arrayCoor = jsonData.features[i].geometry.coordinates
-    // console.log(arrayCoor)
     for (var j = 0; j < arrayCoor.length; j++) {
       var arrayLngLatZero = arrayCoor[j];
-      // console.log('arrayLngLatZero', arrayLngLatZero)
       for (var k = 0; k < arrayLngLatZero.length; k++) {
         var arrayLngLat = arrayLngLatZero[k]
         arrayLngLat.pop()
         arrayLngLat.reverse()
-        // console.log('arrayLngLat', arrayLngLat)
-        // var pol{{yline = L.polyline([[32.09438, 118.763722], [32.096093, 118.825238], [32.065009, 118.848235], [32.04983, 118.783844], [32.064029, 118.718304]], {
+
       }
       var polyline = L.polyline(arrayLngLatZero, {
-        // var polyline = L.polyline(featureJson, {
         //线颜色
         color: 'blue'
       }).addTo(drawnItems);
@@ -244,37 +315,6 @@ function drawGeoJsonPolyline() {
 
 //直接根据geojson绘制
 function drawGeoJSONBeijing() {
-  // var featureJsons = new Array();
-  //合并数组，即赋值
-  // featureJsons.concat(jsonData.features)
-  // console.log(`cleandata`,featureJsons.length);
-  // console.log(featureJsons.length)
-
-  // console.log(`beforeClean`, jsonData);
-  // for (var i = 0; i < jsonData.features.length; i++) {  
-  //   for (var j = 0; j < jsonData.features[i].geometry.coordinates.length; j++) {
-  //     for (let k = 0; k < jsonData.features[i].geometry.coordinates[j].length; k++) {
-  //       //删除北京数据后的0
-  //       jsonData.features[i].geometry.coordinates[j][k].pop()
-  //       //latlng对调，适配天地图
-  //       // console.log(`lnglat`,arrayLngLat);
-  //       jsonData.features[i].geometry.coordinates[j][k].reverse()
-  //       // console.log(`latlng`,arrayLngLat);
-  //       // console.log(`arrayLngLatZero`, arrayCoor[j]);
-  //       // console.log('arrayLngLat', arrayLngLat)
-  //     }
-  //   }
-  // }
-  console.log(`cleandata`, jsonData);
-  // var myStyle = {
-  //   "color": "#00f",
-  //   "weight": 2,
-  //   "opacity": 0.5,
-  //   "fillColor": '#ff2600',
-  //   "fillOpacity": 0.5,
-  //   "stroke": 'red',
-  // };
-  console.log(`afterclean`, jsonData);
   L.geoJSON(jsonData, {
     style: function (feature) {
       switch (feature.properties.CNAME) {
@@ -388,8 +428,6 @@ function drawCanvasPoints() {
       var dot2 = info.layer._map.latLngToContainerPoint([lnglat2[0], lnglat2[1]]);
       var dot3 = info.layer._map.latLngToContainerPoint([lnglat3[0], lnglat3[1]]);
       var dot4 = info.layer._map.latLngToContainerPoint([lnglat4[0], lnglat4[1]]);
-      // console.log(`latlng1`, dot1.x + `,` + dot1.y);
-      // console.log(`latlng2`, dot2.x + `,` + dot2.y);
       ctx.beginPath();
       ctx.moveTo(dot1.x, dot1.y);
       ctx.lineTo(dot2.x, dot2.y);
@@ -419,31 +457,18 @@ function drawCanvasPoints() {
         // [180,90]
       ]
 
-
-      // var dotDatas = [];
-      // for (let index = 0; index < latlngDatas.length; index++) {
-      //   const element = latlngDatas[index];
-      //   // console.log(`element`, element);
-      //   // console.log(`element`, element[0]);
-      //   // console.log(`element`, element[1]);
-      //   var dot = info.layer._map.latLngToContainerPoint([latlngDatas[index][1], latlngDatas[index][0]]);
-      //   dotDatas.push([dot.x, dot.y]);
-      // }
       for (let index = 0; index < latlngDatas.length; index++) {
         const element = latlngDatas[index];
         element.reverse();
       }
 
       var datas = latlngDatas;
-      // for (let index = 0; index < 50; index++) {
-      //     datas.push([Math.random() * 200, Math.random() * 300])
-      // }
+
       console.log(`latlngDatas[0]`, latlngDatas[0]);
-      // console.log(`dotDatas[0]`, dotDatas[0]);
+
       var height = 360;
       var width = 180;
-      // var height = info.canvas.height;
-      // var width = info.canvas.width;
+
       console.log(`canvas.height`, height);
       console.log(`canvas.width`, width);
       var dataXMax = datas[0][0],
@@ -506,7 +531,7 @@ function drawCanvasPoints() {
             cBy = nowY - (nowY - last1Y) * scale;
           return;
         }
-        // console.log(`index`, index);
+
         var last1X = Math.floor(width - diffX * (datas[index - 1][0] - dataXMin)),
           last1Y = Math.floor(height - diffY * (datas[index - 1][1] - dataYMin)),
           last2X = Math.floor(width - diffX * (datas[index - 2][0] - dataXMin)),
@@ -531,31 +556,40 @@ function drawCanvasPoints() {
           now.x,
           now.y
         )
-        // ctx.bezierCurveTo(
-        //   cAx,
-        //   cAy,
-        //   cBx,
-        //   cBy,
-        //   nowX,
-        //   nowY);
-        // console.log(`nowx`, nowX);
-        // console.log(`nowy`, nowY);
+
       })
       ctx.stroke();
       ctx.closePath();
       ctx.draw
-      L.graticule({
-        style: {
-          color: '#f00',
-          weight: 0.1
-        }
-      }).addTo(map);
-
     }
   }
   myCustomCanvasDraw.prototype = new L.CanvasLayer(); // -- setup prototype 
   var myLayer = new myCustomCanvasDraw();
   myLayer.addTo(map);
+  //画大边框
+  L.graticule({
+    style: {
+      color: '#f00',
+      weight: 1
+    },
+    interval: 10,
+  }).addTo(map);
+
+
+  console.log(`graticule`, L.graticule({
+    style: {
+      color: '#f00',
+      weight: 0.1
+    },
+    interval: 10,
+  }));
+
+
+
+}
+//fix Leaflet Vectorgrid 报错
+L.DomEvent.fakeStop = function () {
+  return true;
 }
 
 </script>

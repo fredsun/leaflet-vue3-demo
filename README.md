@@ -12,7 +12,7 @@ npm install echarts vue-echarts --save
 //for leaflet-canvas-marker
 npm install rbush
 网格图思路：大网格用 geojson 的 line 属性直接画，小网格考虑到本身是数据驱动的效果，后续可能的点击/划过展示的需求，不用细geojson线来绘制固定的小格，而是 canvas 写
-leaflet-omnivore.min.js//其他格式转化为geojson
+leaflet-omnivore.min.js//其他格式转化为geojson，geojson的快速读写
 Leaflet.VectorGrid//绘制矢量数据
 geojson-vt//geojson转化为矢量tiles
 leaflet.markercluster//聚合图层

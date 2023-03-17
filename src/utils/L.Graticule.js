@@ -18,6 +18,7 @@ L.Graticule = L.GeoJSON.extend({
         if (this.options.sphere) {
             this.addData(this._getFrame());
         } else {
+            console.log(`this._getGraticule`,this._getGraticule());
             this.addData(this._getGraticule());
         }
     },

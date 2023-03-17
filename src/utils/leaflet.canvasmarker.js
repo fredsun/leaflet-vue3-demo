@@ -1,3 +1,5 @@
+// origin:  https://github.com/eJuke/Leaflet.Canvas-Markers
+// second author: https://gitee.com/panzhiyue/Leaflet-CanvasMarker
 import rbush from "rbush"; //https://www.5axxw.com/wiki/content/7wjc4t
 /**
  * @typedef {Object} MarkerData marker的rubsh数据
