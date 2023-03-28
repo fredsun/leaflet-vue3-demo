@@ -56,18 +56,18 @@ function buildMapGrid() {
     .slicer(grids, {
       rendererFactory: L.canvas.tile,
       vectorTileLayerStyles: {
-        sliced: function(properties, zoom){
+        sliced: function (properties, zoom) {
           var id = properties.colorId;
-          return{
-            fill:true,
-            fillColor:                 
-              id ===0?"#228B22":
-              id ===1?"#FFFF00": 
-              id ===2?"#A52A2A":"000000",
-              fillOpacity: 0.6,
-          color: "#006400",
-          weight: 0.3          
-            }               
+          return {
+            fill: true,
+            fillColor:
+              id === 0 ? "#228B22" :
+                id === 1 ? "#FFFF00" :
+                  id === 2 ? "#A52A2A" : "000000",
+            fillOpacity: 0.6,
+            color: "#006400",
+            weight: 0.3
+          }
         },
 
         interactive: true
@@ -198,6 +198,17 @@ const initMap = () => {
   // drawSimple();
   drawPlane();
   drawCanvasPoints();
+  drawSVG();
+}
+// SVG
+function drawSVG() {
+  var svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svgElement.setAttribute('xmlns', "http://www.w3.org/2000/svg");
+  svgElement.setAttribute('viewBox', "0 0 200 200");
+  // svgElement.innerHTML = '<rect width="200" height="200"/><rect x="75" y="23" width="50" height="50" style="fill:red"/><rect x="75" y="123" width="50" height="50" style="fill:#0013ff"/>';
+  svgElement.innerHTML = '<path class="st0" d="M3.5,15.5c0.99-5.19,2.33-9.97,4-10c2.45-0.05,3.88,10.13,6,10c0.95-0.06,2.04-2.19,3-10"/>';
+  var svgElementBounds = [[32, -130], [13, -100]];
+  L.svgOverlay(svgElement, svgElementBounds).addTo(map);
 }
 
 // 模拟点击

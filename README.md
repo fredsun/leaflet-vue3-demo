@@ -1,8 +1,9 @@
-###包安装
+### 包安装
+```
 npm create vite@latest leaflet-vue3-app  -- --template vue-ts
 npm install dayjs --save
 npm install @icon-park/vue-next --save
-npm install ant-design-vue --save
+~~npm install ant-design-vue --save~~
 npm install axios --save
 npm install localforage --save
 npm install leaflet --save
@@ -18,3 +19,6 @@ geojson-vt//geojson转化为矢量tiles
 leaflet.markercluster//聚合图层
 leaflet.featuregroup.subgroup//动态的从 cluster里增删数据
 leaflet.ChineseTmsProviders//地图服务加载插件
+
+npm install element-plus --save//ui框架
+```
