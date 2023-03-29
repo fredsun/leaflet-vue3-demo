@@ -1,47 +1,96 @@
 <template>
     <div class="qx-main-view" id="qx-main-view">
-         <MyMap mapkey="keyName" class="my-map" :title="title"/>
-         <QXDialog  @clickedItem="handleClicked"/>
-    </div>
-    
-</template>
-<script >
-import {ref,reactive} from 'vue'
-import MyMap from './my-map.vue'
-import QXDialog from './qx-ui/qx-dialog/qx-dialog.vue'
-export default{
-    components:{QXDialog,MyMap},
-    setup(){
-        let title = ref("aaa")
-        // const data = ref<string>(' ')
+        <el-container>
+            <el-header>Header</el-header>
+            <el-container>
+                <!-- left -->
+                <el-aside width="200px">
+                    <el-radio-group v-model="isCollapse" style="margin-bottom: 20px">
+                        <el-radio-button :label="false">expand</el-radio-button>
+                        <el-radio-button :label="true">collapse</el-radio-button>
+                    </el-radio-group>
+                    <el-menu default-active="2" class="el-menu-vertical-demo" :collapse="isCollapse" @open="handleOpen"
+                        @close="handleClose">
+                        <el-sub-menu index="1">
+                            <template #title>
+                                <el-icon>
+                                    <location />
+                                </el-icon>
+                                <span>Navigator One</span>
+                            </template>
+                            <el-menu-item-group>
+                                <template #title><span>Group One</span></template>
+                                <el-menu-item index="1-1">item one</el-menu-item>
+                                <el-menu-item index="1-2">item two</el-menu-item>
+                            </el-menu-item-group>
+                            <el-menu-item-group title="Group Two">
+                                <el-menu-item index="1-3">item three</el-menu-item>
+                            </el-menu-item-group>
+                            <el-sub-menu index="1-4">
+                                <template #title><span>item four</span></template>
+                                <el-menu-item index="1-4-1">item one</el-menu-item>
+                            </el-sub-menu>
+                        </el-sub-menu>
+                        <el-menu-item index="2">
+                            <el-icon><icon-menu /></el-icon>
+                            <template #title>Navigator Two</template>
+                        </el-menu-item>
+                        <el-menu-item index="3" disabled>
+                            <el-icon>
+                                <document />
+                            </el-icon>
+                            <template #title>Navigator Three</template>
+                        </el-menu-item>
+                        <el-menu-item index="4">
+                            <el-icon>
+                                <setting />
+                            </el-icon>
+                            <template #title>Navigator Four</template>
+                        </el-menu-item>
+                    </el-menu>
+                </el-aside>
+                <el-main>
+                    <MyMap mapkey="keyName" class="my-map" :title="title" />
+                    <!-- <QXDialog @clickedItem="handleClicked" /> -->
+                </el-main>
+            </el-container>
+        </el-container>
 
-        const handleClicked = value=>{
-            console.log(`handleClicked${value}`)
-            title.value = value+``
-            console.log(`title${title.value}`)
-            // data.value = '我是父组件异步获取的数据'
-        }
-        
-        
-        return{
-            title,
-            handleClicked
-            // QXDialog,
-            // MyMap
-        }
-    }   
-    
-    
+    </div>
+</template>
+<script lang="ts" setup>
+import { ref, reactive } from 'vue'
+import MyMap from './my-map.vue'
+// import QXDialog from './qx-ui/qx-dialog/qx-dialog.vue'
+import {
+  Document,
+  Menu as IconMenu,
+  Location,
+  Setting,
+} from '@element-plus/icons-vue'
+const isCollapse = ref(true)
+const handleOpen = (key: string, keyPath: string[]) => {
+  console.log(key, keyPath)
 }
+const handleClose = (key: string, keyPath: string[]) => {
+  console.log(key, keyPath)
+}
+
+    
+    
 </script>
 
 <style>
-.my-map{
-  width: 100vw;
-  height: 100vh;
+.my-map {
+    width: 100vw;
+    height: 100vh;
 }
 
-.qx-main-view{
+.qx-main-view {
     position: relative;
+}
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 200px;
+  min-height: 400px;
 }
 </style>

@@ -21,4 +21,5 @@ leaflet.featuregroup.subgroup//动态的从 cluster里增删数据
 leaflet.ChineseTmsProviders//地图服务加载插件
 
 npm install element-plus --save//ui框架
+npm install pinia --save  //总线管理
 ```

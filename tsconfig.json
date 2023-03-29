@@ -16,8 +16,12 @@
     "skipLibCheck": true,
     "noEmit": true,
     "allowJs": true, //script标签里防止不写lang="ts"报错
+    "baseUrl": "./",
     "paths":{//设置路径映射
-      "@/request/*":["./src/request/*"]
+    	// 模块名到基于 baseUrl 的路径映射的列表。
+      "@/request/*":["./src/request/*"],
+			"@": ["src"],
+			"@/*": ["src/*"]
     }
   },
   "include": [
